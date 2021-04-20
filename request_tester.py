@@ -3,9 +3,13 @@ import requests
 def validateAccess(url):
 
     api = requests.get(url)
+    can_advance = False
+
+    print("Checking Request for URL: " + url)
 
     if (api.status_code > 199) and (api.status_code < 300):
         print("Success: ", end = '')
+        can_advance = True
     elif (api.status_code > 299) and (api.status_code < 400):
         print("Redirect: ", end = '')
     elif (api.status_code > 399) and (api.status_code < 500):
@@ -14,10 +18,10 @@ def validateAccess(url):
         print("Internal Server Error: ", end = '')
     else:
         print("Error Code out of Range: ", end = '')
-        
+
     print(api.status_code)
 
-    if api.status_code == 200: 
+    if api.status_code == 200:
         print("Access Granted")
     elif api.status_code == 301:
         print("Redirecting")
@@ -31,4 +35,7 @@ def validateAccess(url):
         print("Not Found")
     elif api.status_code == 503:
         print("Server Cannot Handle Request")
-    
+
+    print("\n")
+
+    return(can_advance)
