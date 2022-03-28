@@ -19,7 +19,7 @@ auth.set_access_token(access_token,access_token_secret)
 api=ty.API(auth)
 
 # Setting date and times when the tweet will be posted
-tweet_time = "02:02"
+tweet_time = "12:00"
 next_tweet_date = "2022-03-27"
 
 # Constantly running script
