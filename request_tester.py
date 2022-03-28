@@ -1,12 +1,18 @@
 import requests
 
+# Simply getting request codes
 def validateAccess(url):
 
+    # Sent api info
     api = requests.get(url)
+
+    # Declaring return statement
     can_advance = False
 
+    # Notifying that its checking for api codes
     print("Checking Request for URL: " + url)
 
+    # If else statements for general status codes
     if (api.status_code > 199) and (api.status_code < 300):
         print("Success: ", end = '')
         can_advance = True
@@ -19,8 +25,10 @@ def validateAccess(url):
     else:
         print("Error Code out of Range: ", end = '')
 
+    # Printing actual status code
     print(api.status_code)
 
+    # Printing specific common status codes
     if api.status_code == 200:
         print("Access Granted")
     elif api.status_code == 301:
@@ -38,4 +46,5 @@ def validateAccess(url):
 
     print("\n")
 
+    # Returning true if 200 level code
     return(can_advance)
