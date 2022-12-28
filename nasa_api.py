@@ -87,12 +87,15 @@ def apod():
     # Creating a list of into to send to twitter api
     list_of_params = [title, date, explanation, url, copyright]
 
-    # Printing info to console
-    print(title +
-    "\nDate: " + date +
-    "\n\n")
-    pp.pprint(explanation)
-    print("\n\nURL: " + url)
+    try:
+        # Printing info to console
+        print(title +
+        "\nDate: " + date +
+        "\n\n")
+        pp.pprint(explanation)
+        print("\n\nURL: " + url)
+    except:
+        print("Nonetype in print.")
 
     # If there is no copyright, put None
     if response.get("copyright") is not None:
