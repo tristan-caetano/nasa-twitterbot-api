@@ -7,32 +7,33 @@ import os
 from PIL import Image
 from datetime import date as dt
 import pandas as pd
+import re
 
 # Def for downloading media from api request
-def download_picture(URL, title):
+def download_picture(title, URL):
+    import re, os
+    from PIL import Image
+    import requests
 
-    # Getting image content
+    # Sanitize title for filename
+    safe_title = re.sub(r'[\\/*?:"<>|]', "_", title)
+    filename = f"{safe_title}.jpg"
+
+    # Save image
     image = requests.get(URL).content
+    with open(filename, "wb") as file:
+        file.write(image)
 
-    # Saving image as a .jpg
-    file = open(title + ".jpg", "wb")
-    file.write(image)
-
-    # Try catch to make sure the media is a downloadable image
+    # Verify it's a valid image
     try:
-        im = Image.open(title + ".jpg")
-        im.show()
-    except PIL.UnidentifiedImageError:
-        print("File is not an image, deleting...")
-
-        # This if else is redundant
-        if os.path.exists(title + ".jpg"):
-            os.remove(title + ".jpg")
-        else:
-            print("Target file does not exist.")
-
-    # Closing file to prevent data leak
-    file.close()
+        im = Image.open(filename)
+        im.verify()  # Optional: verify image integrity
+        return filename
+    except (PIL.UnidentifiedImageError, IOError):
+        print("File is not a valid image, deleting...")
+        if os.path.exists(filename):
+            os.remove(filename)
+        return False
 
 # Getting required api info
 def access_nasa():
@@ -85,7 +86,7 @@ def apod():
     copyright = response.get("copyright")
 
     # Creating a list of into to send to twitter api
-    list_of_params = [title, date, explanation, url, copyright]
+    list_of_params = [title, date, explanation[:200], url, copyright]
 
     try:
         # Printing info to console
@@ -103,9 +104,6 @@ def apod():
     else:
         list_of_params[4] = "None"
         print("\nCopyright: None")
-
-    # Downloads picture to local dir
-    # download_picture(response.get("url"), response.get("title"))
 
     # Returning info
     return list_of_params
